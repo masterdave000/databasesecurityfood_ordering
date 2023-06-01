@@ -1,3 +1,5 @@
+CREATE DATABASE food_ordering;
+USE food_ordering;
 CREATE TABLE
     users (
         user_id int NOT NULL AUTO_INCREMENT,
@@ -84,13 +86,84 @@ CREATE TABLE
 
 CREATE TABLE
     messages (
-        message_id int NOT NULL AUTO_INCREMENT,
+        message_id int NOT NULL AUmysql> 
+TO_INCREMENT,
         user_id int NOT NULL,
         message varchar(255) NOT NULL,
         date_message datetime NOT NULL,
         PRIMARY KEY(message_id),
         FOREIGN KEY(user_id) REFERENCES users(user_id)
     );
+
+-- triggers --
+
+DELIMITER //
+
+CREATE TRIGGER update_available_quantity
+AFTER INSERT ON order_details
+FOR EACH ROW
+BEGIN
+    DECLARE food_qty INT;
+    SELECT available_quantity INTO food_qty FROM food_list WHERE food_id = NEW.food_id;
+    IF food_qty >= NEW.quantity THEN
+        UPDATE food_list SET available_quantity = available_quantity - NEW.quantity WHERE food_id = NEW.food_id;
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insufficient quantity available.';
+    END IF;
+END//
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE TRIGGER calculate_order_total
+BEFORE INSERT ON order_details
+FOR EACH ROW
+BEGIN
+    DECLARE food_price DECIMAL(10, 2);
+    SELECT food_price INTO food_price FROM food_list WHERE food_id = NEW.food_id;
+    SET NEW.total = NEW.quantity * food_price;
+END//
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE TRIGGER update_order_status
+BEFORE INSERT ON order_details
+FOR EACH ROW
+BEGIN
+    IF NEW.expected_delivery < NOW() THEN
+        SET NEW.status = 'Delayed';
+    ELSE
+        SET NEW.status = 'Pending';
+    END IF;
+END//
+
+DELIMITER ;
+
+-- views --
+
+CREATE VIEW active_suppliers AS
+SELECT *
+FROM suppliers
+WHERE active = 'Active';
+
+CREATE VIEW user_order_history AS
+SELECT o.order_id, o.order_date, o.total, o.status, f.food_name
+FROM order_details o
+JOIN food_list f ON o.food_id = f.food_id
+JOIN users u ON o.customer_lastname = u.user_lastname AND o.customer_firstname = u.user_firstname
+WHERE u.user_id = <user_id>;
+
+CREATE VIEW category_sales AS
+SELECT c.category_name, COUNT(o.order_id) AS total_orders, SUM(o.total) AS total_revenue
+FROM order_details o
+JOIN food_list f ON o.food_id = f.food_id
+JOIN category_list c ON f.category_id = c.category_id
+GROUP BY c.category_name;
 
 CREATE VIEW FAMILY_MEAL AS 
 	SELECT food_name, food_price FROM food_list WHERE food_price >= 
@@ -99,3 +172,4 @@ CREATE VIEW FAMILY_MEAL AS
 CREATE VIEW BUDGET_MEAL AS 
 	SELECT food_name, food_price FROM food_list WHERE food_price < 
 5; 
+
