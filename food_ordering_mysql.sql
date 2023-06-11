@@ -156,7 +156,7 @@ SELECT o.order_id, o.order_date, o.total, o.status, f.food_name
 FROM order_details o
 JOIN food_list f ON o.food_id = f.food_id
 JOIN users u ON o.customer_lastname = u.user_lastname AND o.customer_firstname = u.user_firstname
-WHERE u.user_id = <user_id>;
+WHERE u.user_id = user_id;
 
 CREATE VIEW category_sales AS
 SELECT c.category_name, COUNT(o.order_id) AS total_orders, SUM(o.total) AS total_revenue
