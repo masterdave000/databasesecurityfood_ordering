@@ -100,22 +100,6 @@ FOR EACH ROW
 EXECUTE FUNCTION update_available_quantity();
 
 
-CREATE OR REPLACE FUNCTION calculate_order_total() RETURNS TRIGGER AS $$
-DECLARE
-    food_price NUMERIC(10, 2);
-BEGIN
-    SELECT food_price INTO food_price FROM food_list WHERE food_id = NEW.food_id;
-    NEW.total := NEW.quantity * food_price;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER calculate_order_total_trigger
-BEFORE INSERT ON order_details
-FOR EACH ROW
-EXECUTE FUNCTION calculate_order_total();
-
-
 CREATE OR REPLACE FUNCTION update_order_status() RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.expected_delivery < CURRENT_TIMESTAMP THEN
@@ -138,25 +122,25 @@ EXECUTE FUNCTION update_order_status();
 -- views --
 
 -- Create active_suppliers view
-CREATE VIEW active_suppliers AS
-SELECT *
-FROM suppliers
+CREATE VIEW active_suppliers 
+AS SELECT *
+FROM suppliers 
 WHERE active = 'Active';
 
--- Create user_order_history view
-CREATE VIEW user_order_history AS
-SELECT o.order_id, o.order_date, o.total, o.status, f.food_name
-FROM order_details o
-JOIN food_list f ON o.food_id = f.food_id
-JOIN users u ON o.customer_lastname = u.user_lastname AND o.customer_firstname = u.user_firstname
+-- Create user_order_history view 
+CREATE VIEW user_order_history 
+AS SELECT o.order_id, o.order_date, o.total, o.status, f.food_name 
+FROM order_details o 
+JOIN food_list f ON o.food_id = f.food_id 
+JOIN users u ON o.customer_lastname = u.user_lastname AND o.customer_firstname = u.user_firstname 
 WHERE u.user_id = user_id;
 
--- Create category_sales view
-CREATE VIEW category_sales AS
-SELECT c.category_name, COUNT(o.order_id) AS total_orders, SUM(o.total) AS total_revenue
-FROM order_details o
-JOIN food_list f ON o.food_id = f.food_id
-JOIN category_list c ON f.category_id = c.category_id
+-- Create category_sales view 
+CREATE VIEW category_sales  
+AS SELECT c.category_name, COUNT(o.order_id) AS total_orders, SUM(o.total) AS total_revenue 
+FROM order_details o 
+JOIN food_list f ON o.food_id = f.food_id 
+JOIN category_list c ON f.category_id = c.category_id 
 GROUP BY c.category_name;
 
 CREATE VIEW family_meal AS 
