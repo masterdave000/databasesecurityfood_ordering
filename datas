@@ -1,0 +1,97 @@
+-- Insert data into the 'users' table
+INSERT INTO users (user_lastname, user_firstname, user_username, user_password, user_email, user_phonenumber, user_role)
+VALUES
+    ('Smith', 'John', 'johnsmith', 'password123', 'johnsmith@example.com', '1234567890', 'admin'),
+    ('Johnson', 'Emily', 'emilyjohnson', 'securepass', 'emilyjohnson@example.com', '9876543210', 'admin'),
+    ('Williams', 'Michael', 'michaelwilliams', 'pass123', 'michaelwilliams@example.com', '4567890123', 'admin'),
+    ('Jones', 'Emma', 'emmajones', 'password', 'emmajones@example.com', '1112223333', 'admin'),
+    ('Brown', 'James', 'jamesbrown', 'secret', 'jamesbrown@example.com', '9998887777', 'rider'),
+    ('Davis', 'Olivia', 'oliviadavis', '123456', 'oliviadavis@example.com', '4445556666', 'rider'),
+    ('Miller', 'Ava', 'avamiller', 'pass1234', 'avamiller@example.com', '7778889999', 'rider'),
+    ('Wilson', 'Liam', 'liamwilson', 'qwerty', 'liamwilson@example.com', '3332221111', 'rider'),
+    ('Moore', 'Sophia', 'sophiamoore', 'abc123', 'sophiamoore@example.com', '6667778888', 'customer'),
+    ('Taylor', 'Noah', 'noahtaylor', 'passpass', 'noahtaylor@example.com', '2223334444', 'customer');
+
+-- Insert data into the 'suppliers' table
+INSERT INTO suppliers (supplier_lastname, supplier_firstname, contact_number, email, address, country, postal_code, active)
+VALUES
+    ('Johnson', 'David', '1234567890', 'davidjohnson@example.com', '123 Main St', 'USA', '12345', 'Yes'),
+    ('Smith', 'Sarah', '9876543210', 'sarahsmith@example.com', '456 Elm St', 'USA', '54321', 'Yes'),
+    ('Davis', 'Michael', '5556667777', 'michaeldavis@example.com', '789 Oak St', 'USA', '67890', 'Yes'),
+    ('Miller', 'Jessica', '1112223333', 'jessicamiller@example.com', '321 Maple St', 'USA', '09876', 'Yes'),
+    ('Wilson', 'Emily', '9998887777', 'emilywilson@example.com', '654 Pine St', 'USA', '65432', 'No'),
+    ('Jones', 'Matthew', '4445556666', 'matthewjones@example.com', '987 Cedar St', 'USA', '23456', 'No'),
+    ('Brown', 'Olivia', '7778889999', 'oliviabrown@example.com', '159 Spruce St', 'USA', '43210', 'Yes'),
+    ('Taylor', 'Daniel', '3332221111', 'danieltaylor@example.com', '753 Birch St', 'USA', '76543', 'No'),
+    ('Moore', 'Emma', '6667778888', 'emmamoore@example.com', '852 Walnut St', 'USA', '10987', 'Yes'),
+    ('Anderson', 'James', '2223334444', 'jamesanderson@example.com', '369 Ash St', 'USA', '32109', 'Yes');
+
+-- Insert data into the 'category_list' table
+INSERT INTO category_list (category_name, image_name, active)
+VALUES
+    ('Burgers', 'burgers.jpg', 'Yes'),
+    ('Pizzas', 'pizzas.jpg', 'Yes'),
+    ('Sandwiches', 'sandwiches.jpg', 'Yes'),
+    ('Salads', 'salads.jpg', 'Yes'),
+    ('Pasta', 'pasta.jpg', 'Yes'),
+    ('Seafood', 'seafood.jpg', 'Yes'),
+    ('Desserts', 'desserts.jpg', 'Yes'),
+    ('Drinks', 'drinks.jpg', 'Yes'),
+    ('Breakfast', 'breakfast.jpg', 'Yes'),
+    ('Snacks', 'snacks.jpg', 'Yes');
+
+-- Insert data into the 'food_list' table
+INSERT INTO food_list (category_id, supplier_id, food_name, description, food_price, available_quantity, image_name, active)
+VALUES
+    (1, 1, 'Cheeseburger', 'Juicy beef patty with melted cheese', 2, 20, 'cheeseburger.jpg', 'Yes'),
+    (1, 2, 'Chicken Burger', 'Grilled chicken fillet with fresh veggies', 4, 15, 'chicken_burger.jpg', 'Yes'),
+    (2, 3, 'Margherita Pizza', 'Classic pizza with tomato sauce and mozzarella cheese', 5, 12, 'margherita_pizza.jpg', 'Yes'),
+    (2, 4, 'Pepperoni Pizza', 'Pizza topped with pepperoni slices', 2, 10, 'pepperoni_pizza.jpg', 'Yes'),
+    (3, 5, 'BLT Sandwich', 'Bacon, lettuce, and tomato sandwich', 6.99, 18, 'blt_sandwich.jpg', 'Yes'),
+    (3, 6, 'Turkey Club Sandwich', 'Triple-decker sandwich with turkey, bacon, lettuce, and tomato', 7.99, 16, 'turkey_club_sandwich.jpg', 'Yes'),
+    (4, 7, 'Caesar Salad', 'Fresh romaine lettuce with Caesar dressing and croutons', 5.99, 25, 'caesar_salad.jpg', 'Yes'),
+    (4, 8, 'Greek Salad', 'Mixed greens with feta cheese, olives, and vinaigrette', 6.99, 22, 'greek_salad.jpg', 'Yes'),
+    (5, 9, 'Spaghetti Bolognese', 'Spaghetti pasta with meat sauce', 10.99, 20, 'spaghetti_bolognese.jpg', 'Yes'),
+    (5, 10, 'Penne Alfredo', 'Penne pasta in creamy Alfredo sauce', 9.99, 18, 'penne_alfredo.jpg', 'Yes');
+
+-- Insert data into the 'delivery_rider' table
+INSERT INTO delivery_rider (rider_lastname, rider_firstname, contact_number, email, active)
+VALUES
+    ('Johnson', 'Robert', '1234567890', 'robertjohnson@example.com', 'Yes'),
+    ('Smith', 'Jennifer', '9876543210', 'jennifersmith@example.com', 'Yes'),
+    ('Davis', 'William', '5556667777', 'williamdavis@example.com', 'Yes'),
+    ('Miller', 'Elizabeth', '1112223333', 'elizabethmiller@example.com', 'Yes'),
+    ('Wilson', 'Christopher', '9998887777', 'christopherwilson@example.com', 'No'),
+    ('Jones', 'Michelle', '4445556666', 'michellejones@example.com', 'No'),
+    ('Brown', 'Andrew', '7778889999', 'andrewbrown@example.com', 'No'),
+    ('Taylor', 'Jessica', '3332221111', 'jessicataylor@example.com', 'Yes'),
+    ('Moore', 'David', '6667778888', 'davidmoore@example.com', 'Yes'),
+    ('Anderson', 'Sarah', '2223334444', 'sarahanderson@example.com', 'Yes');
+
+-- Insert data into the 'order_details' table
+INSERT INTO order_details (order_id, customer_lastname, customer_firstname, contact_number, delivery_address, postalcode, rider_id, food_id, quantity, total, mode_of_payment, order_date, expected_delivery, status)
+VALUES
+    ('ORDER001', 'Smith', 'John', '1234567890', '123 Main St', '12345', 1, 1, 2, 19.98, 'Cash', '2023-06-11 12:00:00', '2023-06-11 13:00:00', 'Pending'),
+    ('ORDER002', 'Johnson', 'Emily', '9876543210', '456 Elm St', '54321', 2, 2, 1, 8.99, 'Credit Card', '2023-06-11 13:30:00', '2023-06-11 14:30:00', 'Confirmed'),
+    ('ORDER003', 'Williams', 'Michael', '4567890123', '789 Oak St', '67890', 3, 3, 1, 12.99, 'Cash', '2023-06-11 14:45:00', '2023-06-11 15:45:00', 'Delivered'),
+    ('ORDER004', 'Jones', 'Emma', '1112223333', '321 Maple St', '09876', 4, 4, 3, 44.97, 'Credit Card', '2023-06-11 16:00:00', '2023-06-11 17:00:00', 'Pending'),
+    ('ORDER005', 'Brown', 'James', '9998887777', '654 Pine St', '65432', 5, 5, 1, 6.99, 'Cash', '2023-06-11 17:15:00', '2023-06-11 18:15:00', 'Confirmed'),
+    ('ORDER006', 'Davis', 'Olivia', '4445556666', '987 Cedar St', '23456', 6, 6, 2, 15.98, 'Credit Card', '2023-06-11 18:30:00', '2023-06-11 19:30:00', 'Delivered'),
+    ('ORDER007', 'Miller', 'Ava', '7778889999', '159 Spruce St', '43210', 7, 7, 1, 6.99, 'Cash', '2023-06-11 20:00:00', '2023-06-11 21:00:00', 'Pending'),
+    ('ORDER008', 'Wilson', 'Liam', '3332221111', '753 Birch St', '76543', 8, 8, 4, 27.96, 'Credit Card', '2023-06-11 21:15:00', '2023-06-11 22:15:00', 'Confirmed'),
+    ('ORDER009', 'Moore', 'Sophia', '6667778888', '852 Walnut St', '10987', 9, 9, 1, 10.99, 'Cash', '2023-06-11 22:30:00', '2023-06-11 23:30:00', 'Delivered'),
+    ('ORDER010', 'Taylor', 'Noah', '2223334444', '369 Ash St', '32109', 10, 10, 3, 29.97, 'Credit Card', '2023-06-11 23:45:00', '2023-06-12 00:45:00', 'Pending');
+
+-- Insert data into the 'messages' table
+INSERT INTO messages (user_id, message, date_message)
+VALUES
+    (1, 'Hello, I have a question about my order.', '2023-06-11 09:30:00'),
+    (2, 'Sure, what can I help you with?', '2023-06-11 09:35:00'),
+    (1, 'I wanted to change the delivery address.', '2023-06-11 09:40:00'),
+    (2, 'Please provide the new address.', '2023-06-11 09:45:00'),
+    (1, 'The new address is 789 Oak St.', '2023-06-11 09:50:00'),
+    (2, 'Got it. I will update the delivery address.', '2023-06-11 09:55:00'),
+    (3, 'I have a question about the menu.', '2023-06-11 10:00:00'),
+    (4, 'Sure, what would you like to know?', '2023-06-11 10:05:00'),
+    (3, 'Are there any vegetarian options?', '2023-06-11 10:10:00'),
+    (4, 'Yes, we have salads and pasta dishes.', '2023-06-11 10:15:00');
