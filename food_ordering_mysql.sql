@@ -128,6 +128,28 @@ END//
 
 DELIMITER ;
 
+-- Create the trigger function
+DELIMITER // 
+
+CREATE FUNCTION insert_order_message() 
+RETURNS TRIGGER 
+BEGIN 
+    INSERT INTO messages (user_id, message, date_message) 
+    VALUES (NEW.user_id, CONCAT('A new order with ID ', NEW.order_id, ' has been placed.'), NOW()); 
+    RETURN NEW; 
+END// 
+
+DELIMITER ; 
+
+-- Create the trigger
+CREATE TRIGGER insert_order_message_trigger
+AFTER INSERT ON order_details
+FOR EACH ROW
+BEGIN
+    CALL insert_order_message();
+END;
+
+
 
 DELIMITER //
 
