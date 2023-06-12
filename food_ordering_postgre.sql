@@ -100,6 +100,23 @@ FOR EACH ROW
 EXECUTE FUNCTION update_available_quantity();
 
 
+-- Trigger function to insert a message when a new order is placed
+CREATE OR REPLACE FUNCTION insert_order_message() 
+RETURNS TRIGGER AS $$ 
+BEGIN 
+    INSERT INTO messages (user_id, message, date_message) 
+    VALUES (NEW.user_id, 'A new order with ID ' || NEW.order_id || ' has been placed.', NOW()); 
+    RETURN NEW; 
+END; 
+$$ LANGUAGE plpgsql; 
+
+-- Create the trigger 
+CREATE TRIGGER insert_order_message_trigger 
+AFTER INSERT ON order_details 
+FOR EACH ROW 
+EXECUTE FUNCTION insert_order_message(); 
+
+
 CREATE OR REPLACE FUNCTION update_order_status() RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.expected_delivery < CURRENT_TIMESTAMP THEN
