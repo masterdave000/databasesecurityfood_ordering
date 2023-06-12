@@ -1,0 +1,48 @@
+--user
+customer
+food_list = select
+category_list = select
+messages = select, insert,
+order_details = select insert update
+
+create user customer1 WITH PASSWORD 'kingborj9';
+ALTER USER customer1 SET SEARCH_PATH TO food_order;
+GRANT customer TO customer1;
+
+create role customer with LOGIN;
+GRANT CONNECT ON DATABASE food_ordering TO captain;
+GRANT USAGE ON SCHEMA food_order TO customer;
+GRANT SELECT ON TABLE food_list TO customer;
+GRANT SELECT ON TABLE category_list TO customer;
+GRANT SELECT, INSERT ON TABLE messages TO customer;
+GRANT SELECT, INSERT, UPDATE ON TABLE order_details TO customer;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE messages_message_id_seq TO customer;  
+
+
+--admin
+CREATE ROLE admin WITH LOGIN SUPERUSER CREATEDB CREATEROLE;
+GRANT ALL PRIVILEGES ON DATABASE food_ordering TO admin;
+ 
+-- GRANTING ROLES TO USERS
+-- ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
+ CREATE USER administrator WITH PASSWORD 'kingborj9';
+ ALTER USER administrator SET SEARCH_PATH TO food_order;
+ GRANT admin TO administrator;
+
+--rider
+order_details = select update
+messages = select, insert
+delivery_rider = select update insert
+
+create user rider1 WITH PASSWORD 'kingborj9';
+ALTER USER administrator SET SEARCH_PATH TO food_order;
+GRANT rider TO rider1;
+
+create role rider with LOGIN;
+GRANT CONNECT ON DATABASE food_ordering TO rider;
+GRANT USAGE ON SCHEMA food_order TO rider;
+GRANT SELECT, UPDATE ON TABLE order_details TO rider;
+GRANT SELECT, INSERT ON TABLE messages TO rider;
+GRANT SELECT, UPDATE, INSERT ON TABLE delivery_rider TO rider;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE messages_message_id_seq TO rider;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE delivery_rider_rider_id_seq TO rider;
