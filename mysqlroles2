@@ -1,0 +1,162 @@
+--rider
+CREATE USER 'rider1' IDENTIFIED BY 'kingborj9';
+GRANT SELECT, UPDATE ON food_ordering.order_details TO 'rider1';
+GRANT SELECT, INSERT ON food_ordering.messages TO 'rider1';
+GRANT SELECT, UPDATE, INSERT ON food_ordering.delivery_rider TO 'rider1';
+GRANT EXECUTE ON PROCEDURE food_ordering.InsertMessage TO rider1;
+GRANT EXECUTE ON PROCEDURE food_ordering.InsertDeliveryRider TO rider1;
+
+
+--admin
+CREATE USER 'administrator' IDENTIFIED BY 'kingborj9';
+GRANT ALL PRIVILEGES ON food_ordering.* TO 'administrator';
+GRANT EXECUTE ON PROCEDURE food_ordering.InsertUser TO administrator;
+GRANT USAGE, SELECT ON SEQUENCE users_user_id_seq TO administrator;
+GRANT EXECUTE ON PROCEDURE food_ordering.InsertUser TO administrator;
+GRANT EXECUTE ON PROCEDURE food_ordering.InsertMessage TO administrator;
+GRANT EXECUTE ON PROCEDURE food_ordering.InsertOrderDetails TO administrator;
+GRANT EXECUTE ON PROCEDURE food_ordering.InsertFood TO administrator;
+GRANT EXECUTE ON PROCEDURE food_ordering.InsertCategory TO administrator;
+GRANT EXECUTE ON PROCEDURE food_ordering.InsertSupplier TO administrator;
+GRANT EXECUTE ON PROCEDURE food_ordering.InsertDeliveryRider TO administrator;
+
+
+--customer
+CREATE USER 'customer1' IDENTIFIED BY 'kingborj9';
+GRANT SELECT, INSERT, UPDATE ON food_ordering.messages TO customer1;
+GRANT SELECT, INSERT, UPDATE ON food_order.ordering_details TO customer1;
+GRANT SELECT, USAGE ON food_ordering.category_list TO customer1;
+GRANT SELECT, USAGE ON food_ordering.food_list TO customer1;
+GRANT SELECT, INSERT ON food_ordering.messages TO customer1;
+GRANT SELECT ON food_ordering.BUDGET_MEAL to customer1;
+GRANT SELECT ON food_ordering.FAMILY_MEAL to customer1;
+GRANT SELECT, INSERT, UPDATE ON food_ordering.users TO customer1;
+GRANT EXECUTE ON PROCEDURE food_ordering.InsertUser TO customer1;
+GRANT EXECUTE ON PROCEDURE food_ordering.InsertMessage TO customer1;
+GRANT EXECUTE ON PROCEDURE food_ordering.InsertOrderDetails TO customer1;
+
+--stored procedure
+DELIMITER //
+
+CREATE PROCEDURE InsertUser(
+    IN p_lastname VARCHAR(100),
+    IN p_firstname VARCHAR(100),
+    IN p_username VARCHAR(50),
+    IN p_password VARCHAR(50),
+    IN p_email VARCHAR(100),
+    IN p_phonenumber VARCHAR(30),
+    IN p_role VARCHAR(22)
+)
+BEGIN
+    INSERT INTO users (user_lastname, user_firstname, user_username, user_password, user_email, user_phonenumber, user_role)
+    VALUES (p_lastname, p_firstname, p_username, p_password, p_email, p_phonenumber, p_role);
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE InsertSupplier(
+    IN p_lastname VARCHAR(50),
+    IN p_firstname VARCHAR(50),
+    IN p_contact_number VARCHAR(30),
+    IN p_email VARCHAR(100),
+    IN p_address VARCHAR(100),
+    IN p_country VARCHAR(50),
+    IN p_postal_code VARCHAR(50),
+    IN p_active VARCHAR(10)
+)
+BEGIN
+    INSERT INTO suppliers (supplier_lastname, supplier_firstname, contact_number, email, address, country, postal_code, active)
+    VALUES (p_lastname, p_firstname, p_contact_number, p_email, p_address, p_country, p_postal_code, p_active);
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE InsertCategory(
+    IN p_category_name VARCHAR(100),
+    IN p_image_name VARCHAR(100),
+    IN p_active VARCHAR(10)
+)
+BEGIN
+    INSERT INTO category_list (category_name, image_name, active)
+    VALUES (p_category_name, p_image_name, p_active);
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE InsertFood(
+    IN p_category_id INT,
+    IN p_supplier_id INT,
+    IN p_food_name VARCHAR(100),
+    IN p_description VARCHAR(255),
+    IN p_food_price DECIMAL(10, 2),
+    IN p_available_quantity INT,
+    IN p_image_name VARCHAR(100),
+    IN p_active VARCHAR(10)
+)
+BEGIN
+    INSERT INTO food_list (category_id, supplier_id, food_name, description, food_price, available_quantity, image_name, active)
+    VALUES (p_category_id, p_supplier_id, p_food_name, p_description, p_food_price, p_available_quantity, p_image_name, p_active);
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE InsertDeliveryRider(
+    IN p_rider_lastname VARCHAR(50),
+    IN p_rider_firstname VARCHAR(50),
+    IN p_contact_number VARCHAR(30),
+    IN p_email VARCHAR(100),
+    IN p_active VARCHAR(45)
+)
+BEGIN
+    INSERT INTO delivery_rider (rider_lastname, rider_firstname, contact_number, email, active)
+    VALUES (p_rider_lastname, p_rider_firstname, p_contact_number, p_email, p_active);
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE InsertOrderDetails(
+    IN p_order_id VARCHAR(100),
+    IN p_customer_lastname VARCHAR(100),
+    IN p_customer_firstname VARCHAR(100),
+    IN p_contact_number VARCHAR(30),
+    IN p_delivery_address VARCHAR(255),
+    IN p_postalcode VARCHAR(50),
+    IN p_rider_id INT,
+    IN p_food_id INT,
+    IN p_quantity INT,
+    IN p_total DECIMAL(10, 2),
+    IN p_mode_of_payment VARCHAR(50),
+    IN p_order_date DATETIME,
+    IN p_expected_delivery DATETIME,
+    IN p_status VARCHAR(45)
+)
+BEGIN
+    INSERT INTO order_details (order_id, customer_lastname, customer_firstname, contact_number, delivery_address, postalcode, rider_id, food_id, quantity, total, mode_of_payment, order_date, expected_delivery, status)
+    VALUES (p_order_id, p_customer_lastname, p_customer_firstname, p_contact_number, p_delivery_address, p_postalcode, p_rider_id, p_food_id, p_quantity, p_total, p_mode_of_payment, p_order_date, p_expected_delivery, p_status);
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE InsertMessage(
+    IN p_user_id INT,
+    IN p_message VARCHAR(255),
+    IN p_date_message DATETIME
+)
+BEGIN
+    INSERT INTO messages (user_id, message, date_message)
+    VALUES (p_user_id, p_message, p_date_message);
+END //
+
+DELIMITER ;
