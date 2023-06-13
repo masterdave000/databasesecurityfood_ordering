@@ -11,8 +11,8 @@ GRANT ALL PRIVILEGES ON food_ordering.* TO 'administrator';
 
 --customer
 CREATE USER 'customer1' IDENTIFIED BY 'kingborj9';
-GRANT SELECT, INSERT, UPDATE ON food_orderinrg.messages TO customer1;
-GRANT SELECT, INSERT, UPDATE ON food_order.ordering_details TO customer1;
+GRANT SELECT, INSERT, UPDATE ON food_ordering.messages TO customer1;
+GRANT SELECT, INSERT, UPDATE ON food_ordering.order_details TO customer1;
 GRANT SELECT, USAGE ON food_ordering.category_list TO customer1;
 GRANT SELECT, USAGE ON food_ordering.food_list TO customer1;
 GRANT SELECT, INSERT ON food_ordering.messages TO customer1;
