@@ -1,0 +1,194 @@
+--user
+customer
+user = select, update, insert,
+food_list = select
+category_list = select
+messages = select, insert,
+order_details = select insert update
+
+create user customer1 WITH PASSWORD 'kingborj9';
+ALTER USER customer1 SET SEARCH_PATH TO food_order;
+GRANT customer TO customer1;
+
+create role customer with LOGIN;
+GRANT CONNECT ON DATABASE food_ordering TO customer;
+GRANT USAGE ON SCHEMA food_order TO customer;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE users_user_id_seq TO customer;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE messages_message_id_seq TO customer;
+GRANT SELECT ON TABLE food_list TO customer;
+GRANT SELECT ON TABLE category_list TO customer;
+GRANT SELECT, INSERT ON TABLE messages TO customer;
+GRANT SELECT, INSERT, UPDATE ON TABLE order_details TO customer;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE messages_message_id_seq TO customer;  
+GRANT SELECT ON food_order.budget_meal to customer;
+GRANT SELECT ON food_order.family_meal to customer;
+GRANT SELECT, INSERT, UPDATE ON TABLE users TO customer;
+GRANT EXECUTE ON PROCEDURE food_order.InsertUser TO customer;
+GRANT EXECUTE ON PROCEDURE food_order.InsertMessage TO customer;
+GRANT EXECUTE ON PROCEDURE food_order.InsertOrderDetails TO customer;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE messages_message_id_seq TO rider;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE delivery_rider_rider_id_seq TO rider;
+
+
+--admin
+CREATE ROLE admin WITH LOGIN SUPERUSER CREATEDB CREATEROLE;
+GRANT ALL PRIVILEGES ON DATABASE food_ordering TO admin;
+GRANT EXECUTE ON PROCEDURE food_order.InsertUser TO admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE messages_message_id_seq TO admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE delivery_rider_rider_id_seq TO admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE suppliers_supplier_id_seq TO admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE category_list_category_id_seq TO admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE food_list_food_id_seq TO admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE users_user_id_seq TO admin;
+GRANT USAGE, SELECT ON SEQUENCE users_user_id_seq TO admin;
+GRANT EXECUTE ON PROCEDURE food_order.InsertUser TO admin;
+GRANT EXECUTE ON PROCEDURE food_order.InsertMessage TO admin;
+GRANT EXECUTE ON PROCEDURE food_order.InsertOrderDetails TO admin;
+GRANT EXECUTE ON PROCEDURE food_order.InsertFood TO admin;
+GRANT EXECUTE ON PROCEDURE food_order.InsertCategory TO admin;
+GRANT EXECUTE ON PROCEDURE food_order.InsertSupplier TO admin;
+GRANT EXECUTE ON PROCEDURE food_order.InsertDeliveryRider TO admin;
+
+ 
+-- GRANTING ROLES TO USERS
+-- ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
+ CREATE USER administrator WITH PASSWORD 'kingborj9';
+ ALTER USER administrator SET SEARCH_PATH TO food_order;
+ GRANT admin TO administrator;
+ 
+
+--rider
+order_details = select update
+messages = select, insert
+delivery_rider = select update insert
+
+create user rider1 WITH PASSWORD 'kingborj9';
+ALTER USER administrator SET SEARCH_PATH TO food_order;
+GRANT rider TO rider1;
+
+create role rider with LOGIN;
+GRANT CONNECT ON DATABASE food_ordering TO rider;
+GRANT USAGE ON SCHEMA food_order TO rider;
+GRANT SELECT, UPDATE ON TABLE order_details TO rider;
+GRANT SELECT, INSERT ON TABLE messages TO rider;
+GRANT SELECT, UPDATE, INSERT ON TABLE delivery_rider TO rider;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE messages_message_id_seq TO rider;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE delivery_rider_rider_id_seq TO rider;
+GRANT EXECUTE ON PROCEDURE food_order.InsertMessage TO rider;
+GRANT EXECUTE ON PROCEDURE food_order.InsertDeliveryRider TO rider;
+
+
+--stored procedure
+
+
+CREATE OR REPLACE PROCEDURE InsertUser(
+    p_lastname varchar(100),
+    p_firstname varchar(100),
+    p_username varchar(50),
+    p_password varchar(50),
+    p_email varchar(100),
+    p_phonenumber varchar(30),
+    p_role varchar(22)
+)
+AS $$
+BEGIN
+    INSERT INTO users (user_lastname, user_firstname, user_username, user_password, user_email, user_phonenumber, user_role)
+    VALUES (p_lastname, p_firstname, p_username, p_password, p_email, p_phonenumber, p_role);
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE InsertSupplier(
+    p_lastname varchar(50),
+    p_firstname varchar(50),
+    p_contact_number varchar(30),
+    p_email varchar(100),
+    p_address varchar(100),
+    p_country varchar(50),
+    p_postal_code varchar(50),
+    p_active varchar(10)
+)
+AS $$
+BEGIN
+    INSERT INTO suppliers (supplier_lastname, supplier_firstname, contact_number, email, address, country, postal_code, active)
+    VALUES (p_lastname, p_firstname, p_contact_number, p_email, p_address, p_country, p_postal_code, p_active);
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE InsertCategory(
+    p_category_name varchar(100),
+    p_image_name varchar(100),
+    p_active varchar(10)
+)
+AS $$
+BEGIN
+    INSERT INTO category_list (category_name, image_name, active)
+    VALUES (p_category_name, p_image_name, p_active);
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE InsertFood(
+    p_category_id int,
+    p_supplier_id int,
+    p_food_name varchar(100),
+    p_description varchar(255),
+    p_food_price decimal(10, 2),
+    p_available_quantity int,
+    p_image_name varchar(100),
+    p_active varchar(10)
+)
+AS $$
+BEGIN
+    INSERT INTO food_list (category_id, supplier_id, food_name, description, food_price, available_quantity, image_name, active)
+    VALUES (p_category_id, p_supplier_id, p_food_name, p_description, p_food_price, p_available_quantity, p_image_name, p_active);
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE InsertDeliveryRider(
+    p_rider_lastname varchar(50),
+    p_rider_firstname varchar(50),
+    p_contact_number varchar(30),
+    p_email varchar(100),
+    p_active varchar(45)
+)
+AS $$
+BEGIN
+    INSERT INTO delivery_rider (rider_lastname, rider_firstname, contact_number, email, active)
+    VALUES (p_rider_lastname, p_rider_firstname, p_contact_number, p_email, p_active);
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE InsertOrderDetails(
+    p_order_id varchar(100),
+    p_customer_lastname varchar(100),
+    p_customer_firstname varchar(100),
+    p_contact_number varchar(30),
+    p_delivery_address varchar(255),
+    p_postalcode varchar(50),
+    p_rider_id int,
+    p_food_id int,
+    p_quantity int,
+    p_total decimal(10, 2),
+    p_mode_of_payment varchar(50),
+    p_order_date timestamp,
+    p_expected_delivery timestamp,
+    p_status varchar(45)
+)
+AS $$
+BEGIN
+    INSERT INTO order_details (order_id, customer_lastname, customer_firstname, contact_number, delivery_address, postalcode, rider_id, food_id, quantity, total, mode_of_payment, order_date, expected_delivery, status)
+    VALUES (p_order_id, p_customer_lastname, p_customer_firstname, p_contact_number, p_delivery_address, p_postalcode, p_rider_id, p_food_id, p_quantity, p_total, p_mode_of_payment, p_order_date, p_expected_delivery, p_status);
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE InsertMessage(
+    p_user_id int,
+    p_message varchar(255),
+    p_date_message timestamp
+)
+AS $$
+BEGIN
+    INSERT INTO messages (user_id, message, date_message)
+    VALUES (p_user_id, p_message, p_date_message);
+END;
+$$ LANGUAGE plpgsql;
+
