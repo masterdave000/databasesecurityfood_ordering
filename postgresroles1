@@ -1,0 +1,168 @@
+--user
+customer
+food_list = select
+category_list = select
+messages = select, insert,
+order_details = select insert update
+
+create user customer1 WITH PASSWORD 'kingborj9';
+ALTER USER customer1 SET SEARCH_PATH TO food_order;
+GRANT customer TO customer1;
+
+create role customer with LOGIN;
+GRANT CONNECT ON DATABASE food_ordering TO customer;
+GRANT USAGE ON SCHEMA food_order TO customer;
+GRANT SELECT ON TABLE food_list TO customer;
+GRANT SELECT ON TABLE category_list TO customer;
+GRANT SELECT, INSERT ON TABLE messages TO customer;
+GRANT SELECT, INSERT, UPDATE ON TABLE order_details TO customer;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE messages_message_id_seq TO customer;  
+GRANT SELECT ON food_order.budget_meal to customer;
+GRANT SELECT ON food_order.family_meal to customer;
+
+
+--admin
+CREATE ROLE admin WITH LOGIN SUPERUSER CREATEDB CREATEROLE;
+GRANT ALL PRIVILEGES ON DATABASE food_ordering TO admin;
+ 
+-- GRANTING ROLES TO USERS
+-- ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
+ CREATE USER administrator WITH PASSWORD 'kingborj9';
+ ALTER USER administrator SET SEARCH_PATH TO food_order;
+ GRANT admin TO administrator;
+
+--rider
+order_details = select update
+messages = select, insert
+delivery_rider = select update insert
+
+create user rider1 WITH PASSWORD 'kingborj9';
+ALTER USER administrator SET SEARCH_PATH TO food_order;
+GRANT rider TO rider1;
+
+create role rider with LOGIN;
+GRANT CONNECT ON DATABASE food_ordering TO rider;
+GRANT USAGE ON SCHEMA food_order TO rider;
+GRANT SELECT, UPDATE ON TABLE order_details TO rider;
+GRANT SELECT, INSERT ON TABLE messages TO rider;
+GRANT SELECT, UPDATE, INSERT ON TABLE delivery_rider TO rider;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE messages_message_id_seq TO rider;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE delivery_rider_rider_id_seq TO rider;
+
+--stored procedures
+CREATE OR REPLACE FUNCTION InsertUser(
+    p_lastname VARCHAR(100),
+    p_firstname VARCHAR(100),
+    p_username VARCHAR(50),
+    p_password VARCHAR(50),
+    p_email VARCHAR(100),
+    p_phonenumber VARCHAR(30),
+    p_role VARCHAR(22)
+)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO users (user_lastname, user_firstname, user_username, user_password, user_email, user_phonenumber, user_role)
+    VALUES (p_lastname, p_firstname, p_username, p_password, p_email, p_phonenumber, p_role);
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION InsertSupplier(
+    p_lastname VARCHAR(50),
+    p_firstname VARCHAR(50),
+    p_contact_number VARCHAR(30),
+    p_email VARCHAR(100),
+    p_address VARCHAR(100),
+    p_country VARCHAR(50),
+    p_postal_code VARCHAR(50),
+    p_active VARCHAR(10)
+)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO suppliers (supplier_lastname, supplier_firstname, contact_number, email, address, country, postal_code, active)
+    VALUES (p_lastname, p_firstname, p_contact_number, p_email, p_address, p_country, p_postal_code, p_active);
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION InsertCategory(
+    p_category_name VARCHAR(100),
+    p_image_name VARCHAR(100),
+    p_active VARCHAR(10)
+)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO category_list (category_name, image_name, active)
+    VALUES (p_category_name, p_image_name, p_active);
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION InsertFood(
+    p_category_id INT,
+    p_supplier_id INT,
+    p_food_name VARCHAR(100),
+    p_description VARCHAR(255),
+    p_food_price DECIMAL(10, 2),
+    p_available_quantity INT,
+    p_image_name VARCHAR(100),
+    p_active VARCHAR(10)
+)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO food_list (category_id, supplier_id, food_name, description, food_price, available_quantity, image_name, active)
+    VALUES (p_category_id, p_supplier_id, p_food_name, p_description, p_food_price, p_available_quantity, p_image_name, p_active);
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION InsertDeliveryRider(
+    p_rider_lastname VARCHAR(50),
+    p_rider_firstname VARCHAR(50),
+    p_contact_number VARCHAR(30),
+    p_email VARCHAR(100),
+    p_active VARCHAR(45)
+)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO delivery_rider (rider_lastname, rider_firstname, contact_number, email, active)
+    VALUES (p_rider_lastname, p_rider_firstname, p_contact_number, p_email, p_active);
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION InsertOrderDetails(
+    p_order_id VARCHAR(100),
+    p_customer_lastname VARCHAR(100),
+    p_customer_firstname VARCHAR(100),
+    p_contact_number VARCHAR(30),
+    p_delivery_address VARCHAR(255),
+    p_postalcode VARCHAR(50),
+    p_rider_id INT,
+    p_food_id INT,
+    p_quantity INT,
+    p_total DECIMAL(10, 2),
+    p_mode_of_payment VARCHAR(50),
+    p_order_date TIMESTAMPTZ,
+    p_expected_delivery TIMESTAMPTZ,
+    p_status VARCHAR(45)
+)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO order_details (order_id, customer_lastname, customer_firstname, contact_number, delivery_address, postalcode, rider_id, food_id, quantity, total, mode_of_payment, order_date, expected_delivery, status)
+    VALUES (p_order_id, p_customer_lastname, p_customer_firstname, p_contact_number, p_delivery_address, p_postalcode, p_rider_id, p_food_id, p_quantity, p_total, p_mode_of_payment, p_order_date, p_expected_delivery, p_status);
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION InsertMessage(
+    p_user_id INT,
+    p_message VARCHAR(255),
+    p_date_message TIMESTAMPTZ
+)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO messages (user_id, message, date_message)
+    VALUES (p_user_id, p_message, p_date_message);
+END;
+$$ LANGUAGE plpgsql;
