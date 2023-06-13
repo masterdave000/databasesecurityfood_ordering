@@ -86,8 +86,7 @@ CREATE TABLE
 
 CREATE TABLE
     messages (
-        message_id int NOT NULL AUmysql> 
-TO_INCREMENT,
+        message_id int NOT NULL AUTO_INCREMENT,
         user_id int NOT NULL,
         message varchar(255) NOT NULL,
         date_message datetime NOT NULL,
@@ -115,16 +114,6 @@ END//
 DELIMITER ;
 
 
-DELIMITER //
-
-CREATE TRIGGER calculate_order_total
-BEFORE INSERT ON order_details
-FOR EACH ROW
-BEGIN
-    DECLARE food_price DECIMAL(10, 2);
-    SELECT food_price INTO food_price FROM food_list WHERE food_id = NEW.food_id;
-    SET NEW.total = NEW.quantity * food_price;
-END//
 
 DELIMITER ;
 
