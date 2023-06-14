@@ -11,7 +11,6 @@ GRANT EXECUTE ON PROCEDURE food_ordering.InsertDeliveryRider TO rider1;
 CREATE USER 'administrator' IDENTIFIED BY 'kingborj9';
 GRANT ALL PRIVILEGES ON food_ordering.* TO 'administrator';
 GRANT EXECUTE ON PROCEDURE food_ordering.InsertUser TO administrator;
-GRANT USAGE, SELECT ON SEQUENCE users_user_id_seq TO administrator;
 GRANT EXECUTE ON PROCEDURE food_ordering.InsertUser TO administrator;
 GRANT EXECUTE ON PROCEDURE food_ordering.InsertMessage TO administrator;
 GRANT EXECUTE ON PROCEDURE food_ordering.InsertOrderDetails TO administrator;
