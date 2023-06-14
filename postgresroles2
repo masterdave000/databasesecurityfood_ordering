@@ -26,8 +26,8 @@ GRANT SELECT, INSERT, UPDATE ON TABLE users TO customer;
 GRANT EXECUTE ON PROCEDURE food_order.InsertUser TO customer;
 GRANT EXECUTE ON PROCEDURE food_order.InsertMessage TO customer;
 GRANT EXECUTE ON PROCEDURE food_order.InsertOrderDetails TO customer;
-GRANT USAGE, SELECT, UPDATE ON SEQUENCE messages_message_id_seq TO rider;
-GRANT USAGE, SELECT, UPDATE ON SEQUENCE delivery_rider_rider_id_seq TO rider;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE messages_message_id_seq TO customer;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE delivery_rider_rider_id_seq TO customer;
 
 
 --admin
